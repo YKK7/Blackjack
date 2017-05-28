@@ -48,14 +48,14 @@ describe("Deck", function(){
     let deck2 = new Deck();
     deck1.shuffle();
     let count = 0;
-    for(let i = 0; i < 52; i++){
+    for(let i = 0; i < 312; i++){
       if(deck1.drawCard().toString() !== deck2.drawCard().toString()) {
         count++;
       }
     }
 
-    it("the shuffled deck should have at least 26 cards in new positions", function(){
-      expect(count).toBeGreaterThan(25);
+    it("the shuffled deck should have at least 200 cards in new positions", function(){
+      expect(count).toBeGreaterThan(199);
     });
   });
 

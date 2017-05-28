@@ -45,25 +45,38 @@ class Deck{
 
     generateDeck(){
       let deck = [];
-      for(let rank = 2; rank <= 14; rank++){
-        for(let suit = 1; suit <= 4; suit++){
-          deck.push(new Card(rank, suit));
+      for(let i = 0; i < 6; i++){
+        for(let rank = 2; rank <= 14; rank++){
+          for(let suit = 1; suit <= 4; suit++){
+            deck.push(new Card(rank, suit));
+          }
         }
       }
       return deck;
     }
 
-    //Durstenfeld shuffle
+    getDeck(){
+      return this.cards;
+    }
+
+    size(){
+      return this.cards.length;
+    }
+
     shuffle(){
-        for (let i = this.cards.length - 1; i > 0; i--) {
-            let j = Math.floor(Math.random() * (i + 1));
-            let temp = this.cards[i];
-            this.cards[i] = this.cards[j];
-            this.cards[j] = temp;
-        }
+      for (let i = this.cards.length - 1; i > 0; i--) {
+          let j = Math.floor(Math.random() * (i + 1));
+          let temp = this.cards[i];
+          this.cards[i] = this.cards[j];
+          this.cards[j] = temp;
+      }
     }
 
     drawCard(){
+      if(this.cards.length === 100){
+        this.cards = this.generateDeck();
+        this.shuffle();
+      }
       return this.cards.pop();
     }
 }

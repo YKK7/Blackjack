@@ -13,4 +13,7 @@ function readInput() {
     let input = document.getElementById("form1");
     display.innerHTML += input.elements[0].value + "<br>";
 }
-display.innerHTML += deck.drawCard().toString() + "<br>";
+
+for(let i = 0; i < 312; i++){
+  display.innerHTML += deck.drawCard().toString() + ", new size: " + deck.size() + "<br>";
+}

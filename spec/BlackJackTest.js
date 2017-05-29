@@ -10,11 +10,11 @@ describe("Card class", function(){
 
   describe("constructor()", function(){
     it("Sets suit = Hearts", function(){
-      expect(card.getSuitShape()).toEqual("\u2665");
+      expect(card.getSuit()).toEqual("\u2665");
     });
 
     it("Sets rank = King", function(){
-      expect(card.getRankName()).toEqual("K");
+      expect(card.getRank()).toEqual("K");
     });
   });
 
@@ -23,8 +23,21 @@ describe("Card class", function(){
       expect(card.toString()).toEqual("K \u2665");
     });
   });
-});
 
+  describe("value()", function(){
+    let card2 = new Card(2, 1);
+    let card3 = new Card(14, 2);
+    it("should return 10 for K \u2665", function(){
+      expect(card.value()).toEqual(10);
+    });
+    it("should return 2 for 2 \u2666", function(){
+      expect(card2.value()).toEqual(2);
+    });
+    it("should return 1 for A \u2663", function(){
+      expect(card2.value()).toEqual(2);
+    });
+  });
+});
 
 describe("Deck class", function(){
 
@@ -55,6 +68,34 @@ describe("Deck class", function(){
 
     it("the shuffled deck should have at least 200 cards in new positions", function(){
       expect(count).toBeGreaterThan(199);
+    });
+  });
+});
+
+describe("Hand class", function(){
+
+  describe("addCard()", function(){
+    let hand = new Hand();
+    hand.addCard(new Card(12, 3));
+    hand.addCard(new Card(14, 4));
+
+    it("should correctly add Q \u2665 and A \u2660", function(){
+      expect(hand.toString()).toEqual("Q \u2665 A \u2660 ")
+    });
+
+    it("should increase size() to 2", function(){
+      expect(hand.size()).toEqual(2);
+    });
+  });
+
+  describe("clear()", function(){
+    let hand = new Hand();
+    hand.addCard(new Card(12, 3));
+    hand.addCard(new Card(14, 4));
+    hand.clear();
+
+    it("should set hand size to zero", function(){
+      expect(hand.size()).toEqual(0);
     });
   });
 });

@@ -5,5 +5,5 @@ let display = document.getElementById("display");
 let deck = new Deck();
 deck.shuffle();
 
-let table = new Table(display);
-table.print("You have " + table.player.getWallet() + " chips");
+let game = new Game(display);
+game.print("You have " + game.player.getWallet() + " chips");

@@ -6,15 +6,15 @@ class Card {
     this.suit = suit;
   }
 
+  value(){
+    if(this.rank < 11){
+      return this.rank;
+    } else if(this.rank < 14){
+      return 10;
+    } else return 1;
+  }
+
   getRank() {
-    return this.rank;
-  }
-
-  getSuit() {
-    return this.suit;
-  }
-
-  getRankName() {
     if (this.rank < 11) {
       return this.rank;
     } else if (this.rank === 11) {
@@ -24,10 +24,9 @@ class Card {
     } else if (this.rank === 13) {
       return "K";
     } else return "A";
-
   }
 
-  getSuitShape() {
+  getSuit() {
     if (this.suit === 1) {
       return "\u2666";
     } else if (this.suit === 2) {
@@ -38,7 +37,7 @@ class Card {
   }
 
   toString() {
-    return this.getRankName() + " " + this.getSuitShape();
+    return this.getRank() + " " + this.getSuit();
   }
 }
 
@@ -57,14 +56,6 @@ class Deck {
       }
     }
     return deck;
-  }
-
-  getDeck() {
-    return this.cards;
-  }
-
-  size() {
-    return this.cards.length;
   }
 
   shuffle() {
@@ -89,6 +80,42 @@ class Hand {
   constructor() {
     this.cards = [];
   }
+
+  addCard(card){
+    this.cards.push(card);
+  }
+
+  size(){
+    return this.cards.length;
+  }
+
+  toString(){
+    let result = "";
+    for(let i = 0; i < this.cards.length; i++){
+      result += this.cards[i] + " ";
+    }
+    return result;
+  }
+
+  clear(){
+    this.cards = [];
+  }
+
+  value(){
+    let hasAce = false;
+    let size = size();
+    let result = 0;
+
+    for(let i = 0; i < size; i++){
+      result += this.cards[i].value();
+      if(this.cards[i].value() === 1){
+        hasAce = true;
+      }
+    } 
+    if(result < 11 && hasAce){
+      return result + 10;
+    } else return result;
+  }
 }
 
 class Player {
@@ -100,7 +127,7 @@ class Player {
     if (this.wallet > amount) {
       this.wallet -= amount;
     } else {
-      alert("Insufficient Funds")
+      alert("Insufficient Funds");
     }
     return this.wallet;
   }
@@ -115,7 +142,7 @@ class Player {
   }
 }
 
-class Table {
+class Game {
   constructor(display) {
     let initialWallet = prompt("How many chips do you want?");
     this.player = new Player(initialWallet);
@@ -133,10 +160,6 @@ class Table {
 
   printNew(output) {
     display.innerHTML = output;
-  }
-
-  print(output) {
-    display.innerHTML += output;
   }
 
 }

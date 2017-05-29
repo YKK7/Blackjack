@@ -103,7 +103,7 @@ class Hand {
 
   value(){
     let hasAce = false;
-    let size = size();
+    let size = this.size();
     let result = 0;
 
     for(let i = 0; i < size; i++){
@@ -112,7 +112,7 @@ class Hand {
         hasAce = true;
       }
     } 
-    if(result < 11 && hasAce){
+    if(result < 12 && hasAce){
       return result + 10;
     } else return result;
   }
@@ -146,8 +146,10 @@ class Game {
   constructor(display) {
     let initialWallet = prompt("How many chips do you want?");
     this.player = new Player(initialWallet);
-    this.currentBet = 0;
+    this.bet = 0;
     this.display = display;
+    this.playerHand = new Hand();
+    this.dealerHand = new Hand();
   }
 
   print(output) {
@@ -161,5 +163,7 @@ class Game {
   printNew(output) {
     display.innerHTML = output;
   }
+
+  play()
 
 }

@@ -41,6 +41,28 @@ a:hover, a:active {
     outline: none;
 }
 
+.btn-primary{
+    background-color: #3399ff;
+    color: #fff;
+    padding: 10px 10px;
+    font-size: 20px;
+    border-radius: 6px;
+}
+.btn-secondary{
+    background-color: #0066cc;
+    color: #fff;
+    padding: 10px 10px;
+    border-radius: 6px;
+    font-size: 20px;
+}
+.btn-info{
+    background-color: #0000ff;
+    color: #fff;
+    padding: 10px 10px;
+    border-radius: 6px;
+    font-size: 20px;
+}
+
 
 /* ===================================== HEADER STYLE ========================================= */
 

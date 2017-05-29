@@ -1,109 +1,142 @@
 " use strict ";
 
-class Card{
-  constructor(rank, suit){
+class Card {
+  constructor(rank, suit) {
     this.rank = rank;
     this.suit = suit;
   }
 
-  getRank(){
+  getRank() {
     return this.rank;
   }
 
-  getSuit(){
+  getSuit() {
     return this.suit;
   }
 
-  getRankName(){
-    if(this.rank < 11){
+  getRankName() {
+    if (this.rank < 11) {
       return this.rank;
-    } else if(this.rank === 11){
+    } else if (this.rank === 11) {
       return "J";
-    } else if(this.rank === 12){
+    } else if (this.rank === 12) {
       return "Q";
-    } else if(this.rank === 13){
+    } else if (this.rank === 13) {
       return "K";
     } else return "A";
 
   }
 
-  getSuitShape(){
-    if(this.suit === 1){
+  getSuitShape() {
+    if (this.suit === 1) {
       return "\u2666";
-    } else if(this.suit === 2){
+    } else if (this.suit === 2) {
       return "\u2663";
-    }else if(this.suit === 3){
+    } else if (this.suit === 3) {
       return "\u2665";
-    }else return "\u2660";
+    } else return "\u2660";
   }
 
-  toString(){
+  toString() {
     return this.getRankName() + " " + this.getSuitShape();
   }
 }
 
-class Deck{
-    constructor(){
-      this.cards = this.generateDeck();
-    }
+class Deck {
+  constructor() {
+    this.cards = this.generateDeck();
+  }
 
-    generateDeck(){
-      let deck = [];
-      for(let i = 0; i < 6; i++){
-        for(let rank = 2; rank <= 14; rank++){
-          for(let suit = 1; suit <= 4; suit++){
-            deck.push(new Card(rank, suit));
-          }
+  generateDeck() {
+    let deck = [];
+    for (let i = 0; i < 6; i++) {
+      for (let rank = 2; rank <= 14; rank++) {
+        for (let suit = 1; suit <= 4; suit++) {
+          deck.push(new Card(rank, suit));
         }
       }
-      return deck;
     }
+    return deck;
+  }
 
-    getDeck(){
-      return this.cards;
-    }
+  getDeck() {
+    return this.cards;
+  }
 
-    size(){
-      return this.cards.length;
-    }
+  size() {
+    return this.cards.length;
+  }
 
-    shuffle(){
-      for (let i = this.cards.length - 1; i > 0; i--) {
-          let j = Math.floor(Math.random() * (i + 1));
-          let temp = this.cards[i];
-          this.cards[i] = this.cards[j];
-          this.cards[j] = temp;
-      }
+  shuffle() {
+    for (let i = this.cards.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      let temp = this.cards[i];
+      this.cards[i] = this.cards[j];
+      this.cards[j] = temp;
     }
+  }
 
-    drawCard(){
-      if(this.cards.length === 100){
-        this.cards = this.generateDeck();
-        this.shuffle();
-      }
-      return this.cards.pop();
+  drawCard() {
+    if (this.cards.length === 100) {
+      this.cards = this.generateDeck();
+      this.shuffle();
     }
+    return this.cards.pop();
+  }
 }
 
-class Player{
-  constructor(startingWallet){
+class Hand {
+  constructor() {
+    this.cards = [];
+  }
+}
+
+class Player {
+  constructor(startingWallet) {
     this.wallet = startingWallet;
   }
 
-  makeBet(amount){
-    if(this.wallet > amount){
+  makeBet(amount) {
+    if (this.wallet > amount) {
       this.wallet -= amount;
     } else {
       alert("Insufficient Funds")
-    } return this.wallet;
+    }
+    return this.wallet;
   }
 
-  addMoney(amount){
+  addMoney(amount) {
     this.wallet += amount;
     return this.wallet;
   }
 
-  getWallet(){
+  getWallet() {
     return this.wallet;
   }
+}
+
+class Table {
+  constructor(display) {
+    let initialWallet = prompt("How many chips do you want?");
+    this.player = new Player(initialWallet);
+    this.currentBet = 0;
+    this.display = display;
+  }
+
+  print(output) {
+    display.innerHTML += output;
+  }
+
+  println(output) {
+    display.innerHTML += output + "<br>";
+  }
+
+  printNew(output) {
+    display.innerHTML = output;
+  }
+
+  print(output) {
+    display.innerHTML += output;
+  }
+
 }

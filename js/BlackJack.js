@@ -10,6 +10,10 @@ class Card{
     return this.rank;
   }
 
+  getSuit(){
+    return this.suit;
+  }
+
   getRankName(){
     if(this.rank < 11){
       return this.rank;
@@ -79,4 +83,27 @@ class Deck{
       }
       return this.cards.pop();
     }
+}
+
+class Player{
+  constructor(startingWallet){
+    this.wallet = startingWallet;
+  }
+
+  makeBet(amount){
+    if(this.wallet > amount){
+      this.wallet -= amount;
+    } else {
+      alert("Insufficient Funds")
+    } return this.wallet;
+  }
+
+  addMoney(amount){
+    this.wallet += amount;
+    return this.wallet;
+  }
+
+  getWallet(){
+    return this.wallet;
+  }
 }

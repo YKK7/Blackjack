@@ -47,3 +47,6 @@ Thumbs.db
 # Maven
 log/
 target/
+
+#eslint
+node_modules/

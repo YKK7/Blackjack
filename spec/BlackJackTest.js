@@ -179,10 +179,10 @@ describe("Player class", function () {
   });
 });
 
-describe("Game class", function () {
+xdescribe("Game class", function () {
 
   describe("dealCards() - also tests dealTo(hand)", function () {
-    let game = new Game(document.getElementById("display"));
+    let game = new Game();
     game.dealCards();
     it("should give 2 cards to both dealer and player", function () {
       expect(game.playerHand.size()).toEqual(2);

@@ -1,5 +1,7 @@
 " use strict ";
 
+let display = document.getElementById("display");
+
 class Card {
   constructor(rank, suit) {
     this.rank = rank;
@@ -141,6 +143,10 @@ class Player {
     return this.wallet;
   }
 
+  printWallet() {
+    return Math.round(this.wallet);
+  }
+
 }
 
 class Game {
@@ -163,7 +169,7 @@ class Game {
   }
 
   printNew(output) {
-    display.innerHTML = output;
+    display.innerHTML = output + "<br>";
   }
 
   play() {
@@ -172,14 +178,16 @@ class Game {
       this.playRound(go);
       go = confirm("Play again?");
     }
-    this.printNew("Cashed out with $" + Math.round(this.player.wallet) + "<br>");
+    this.printNew("Cashed out with $" + this.player.printWallet() + "<br>");
     this.println("Thanks for playing! Have a great day!");
   }
 
   playRound(go) {
     this.takeBet();
     this.dealCards();
-    this.checkNatural();
+    if (!this.checkNatural()) {
+      this.regularTurn();
+    }
     this.checkBalance(go);
   }
 
@@ -187,9 +195,9 @@ class Game {
     let amount = Math.round(prompt("How much would you like to bet?"));
     if (amount <= this.player.wallet && amount >= 100) {
       this.bet = amount;
-      this.println("Bet: " + amount + ", Wallet: " + this.player.makeBet(amount));
+      this.printNew("Bet: " + amount + ", Wallet: " + this.player.makeBet(amount));
     } else if (amount > this.player.wallet) {
-      this.println("You only have " + Math.round(this.player.wallet) +
+      this.println("You only have " + this.player.printWallet() +
         " chips remaining, please enter a valid amount");
       this.takeBet();
     } else {
@@ -199,28 +207,106 @@ class Game {
   }
 
   dealCards() {
+    this.playerHand.clear();
+    this.dealerHand.clear();
     this.dealTo(this.playerHand);
     this.dealTo(this.dealerHand);
     this.dealTo(this.playerHand);
     this.dealTo(this.dealerHand);
+    this.println("Players Hand: " + this.playerHand.toString() + " Total: " + this.playerHand.value());
+    this.println("Dealer's face up card: " + this.dealerHand.cards[0]);
   }
 
   dealTo(hand) {
     hand.addCard(this.deck.drawCard());
   }
 
-  checkNatural(){
-    if(this.dealerHand.isNatural()){
-      if(this.playerHand.isNatural()){
+  checkNatural() {
+    if (this.dealerHand.isNatural()) {
+      if (this.playerHand.isNatural()) {
         //player gets money back
+        this.println("Blackjack! But the dealer has " + this.dealerHand.toString() + ".. You get your money back");
+        this.println("Wallet: " + this.player.printWallet());
+        this.payPlayer(this.bet);
+        return true;
       } else {
         //dealer wins, go to next round
+        this.println("Dealer has a natural 21. You lose!");
+        this.println("Wallet: " + this.player.printWallet());
+        return true;
       }
-    } else if(this.playerHand.isNatural()){
+    } else if (this.playerHand.isNatural()) {
       //player wins 1.5x bet
+      this.println("Blackjack! You win $" + this.bet * 1.5 + "!");
+      this.println("Wallet: " + this.player.printWallet());
+      this.payPlayer(this.bet * 2.5);
+      return true;
     } else {
       //play the rest of round
+      return false;
     }
+  }
+
+  regularTurn() {
+    if (!this.playerTurn()) {
+      if (!this.dealerTurn()) {
+        this.resolveCards();
+      }
+    }
+  }
+  playerTurn() {
+    let hit = true;
+    let bust = false;
+    while (hit && !bust) {
+      hit = confirm("Would you like to hit?");
+      if (hit) {
+        this.dealTo(this.playerHand);
+        this.println("Players Hand: " + this.playerHand.toString() + " Total: " + this.playerHand.value());
+        if (this.playerHand.value() > 21) {
+          this.println("Bust! Dealer wins!");
+          bust = true;
+        }
+      }
+    }
+    return bust;
+  }
+
+  dealerTurn() {
+    //dealer goes
+    this.println("Dealer's hand: " + this.dealerHand.toString() + " Total: " + this.dealerHand.value());
+    let bust = false;
+    if (this.dealerHand.value() > this.playerHand.value()) {
+      this.println("Dealer wins!");
+    } else {
+      while (this.dealerHand.value() < 17 && !bust) {
+        this.dealTo(this.dealerHand);
+        this.println("Dealer hits -- new Hand: " + this.dealerHand.toString() + " Total: " + this.dealerHand.value());
+        if (this.dealerHand.value() > 21) {
+          bust = true;
+          this.payPlayer(this.bet * 2);
+          this.println("Dealer busts! Player wins $" + this.bet + "!");
+          this.println("Wallet : " + this.player.printWallet());
+        }
+      }
+    }
+    return bust;
+  }
+
+  resolveCards() {
+    if (this.dealerHand.value() > this.playerHand.value()) {
+      this.println("Dealer's " + this.dealerHand.value() + " beats Player's " + this.playerHand.value() + "... Dealer wins!");
+    } else if (this.dealerHand.value() < this.playerHand.value()) {
+      this.println("Player's " + this.playerHand.value() + " beats Dealer's " + this.dealerHand.value() + "... Player wins $" + this.bet + "!");
+      this.payPlayer(this.bet * 2);
+      this.println("Wallet: " + this.player.printWallet());
+    } else {
+      this.println("Player's " + this.playerHand.value() + " is tied with Dealer's " + this.dealerHand.value() + "... bet is returned to player");
+      this.println("Wallet: " + this.player.printWallet());
+    }
+  }
+
+  payPlayer(amount) {
+    this.player.addMoney(amount);
   }
 
   checkBalance(go) {
@@ -233,7 +319,7 @@ class Game {
 
   buyMoreChips() {
     let amount = Math.round(prompt("How many chips would you like to purchase?"));
-    if(amount + this.player.wallet >= 100){
+    if (amount + this.player.wallet >= 100) {
       this.player.addMoney(amount);
       this.println(amount + " chips added, new balance: " + this.player.wallet);
     } else {

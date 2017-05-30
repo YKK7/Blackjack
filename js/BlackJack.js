@@ -116,6 +116,10 @@ class Hand {
       return result + 10;
     } else return result;
   }
+
+  isNatural() {
+    return (this.size() === 2) && (this.value() === 21);
+  }
 }
 
 class Player {
@@ -141,7 +145,7 @@ class Player {
 
 class Game {
   constructor() {
-    let initialWallet = prompt("How many chips do you want? Minimum bet is $100");
+    let initialWallet = prompt("How many chips would you like to start with? Minimum bet is $100");
     this.player = new Player(initialWallet);
     this.bet = 0;
     this.playerHand = new Hand();
@@ -175,7 +179,8 @@ class Game {
   playRound(go) {
     this.takeBet();
     this.dealCards();
-    this.checkBalance();
+    this.checkNatural();
+    this.checkBalance(go);
   }
 
   takeBet() {
@@ -204,8 +209,22 @@ class Game {
     hand.addCard(this.deck.drawCard());
   }
 
-  checkBalance() {
-    if (this.player.wallet <= 100) {
+  checkNatural(){
+    if(this.dealerHand.isNatural()){
+      if(this.playerHand.isNatural()){
+        //player gets money back
+      } else {
+        //dealer wins, go to next round
+      }
+    } else if(this.playerHand.isNatural()){
+      //player wins 1.5x bet
+    } else {
+      //play the rest of round
+    }
+  }
+
+  checkBalance(go) {
+    if (this.player.wallet < 100) {
       if (confirm("You have less than the minimum bet (100), would you like to buy more chips?")) {
         this.buyMoreChips();
       } else go = false;

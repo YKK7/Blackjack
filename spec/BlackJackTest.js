@@ -120,7 +120,7 @@ describe("Hand class", function () {
     });
   });
 
-    describe("value() of four Aces", function () {
+  describe("value() of four Aces", function () {
     let hand = new Hand();
     hand.addCard(new Card(14, 3));
     hand.addCard(new Card(14, 4));
@@ -129,6 +129,9 @@ describe("Hand class", function () {
 
     it("should be 14", function () {
       expect(hand.value()).toEqual(14);
+    });
+    it("and the hand should contain four Aces", function(){
+      expect(hand.toString()).toEqual("A \u2665 A \u2660 A \u2666 A \u2663 ");
     });
   });
 });
@@ -176,15 +179,15 @@ describe("Player class", function () {
   });
 });
 
-describe("Game class", function(){
+describe("Game class", function () {
 
-  describe("dealCards() - also tests dealTo(hand)", function(){
+  describe("dealCards() - also tests dealTo(hand)", function () {
     let game = new Game(document.getElementById("display"));
     game.dealCards();
-    it("should give 2 cards to both dealer and player", function(){
+    it("should give 2 cards to both dealer and player", function () {
       expect(game.playerHand.size()).toEqual(2);
       expect(game.dealerHand.size()).toEqual(2);
-    });  
+    });
   });
 
 });

@@ -141,7 +141,7 @@ class Player {
 
 class Game {
   constructor() {
-    let initialWallet = prompt("How many chips do you want?");
+    let initialWallet = prompt("How many chips do you want? Minimum bet is $100");
     this.player = new Player(initialWallet);
     this.bet = 0;
     this.playerHand = new Hand();
@@ -169,29 +169,26 @@ class Game {
       go = confirm("Play again?");
     }
     this.printNew("Cashed out with $" + Math.round(this.player.wallet) + "<br>");
-
+    this.println("Thanks for playing! Have a great day!");
   }
 
   playRound(go) {
     this.takeBet();
     this.dealCards();
-    if (this.player.wallet <= 25) {
-      if (confirm("Minimum bet is 25, would you like to buy more chips?")) {
-        let amount = Math.round(prompt("How many chips would you like to purchase?"));
-        this.player.addMoney(amount);
-        this.println(amount + " chips added, new balance: " + this.player.wallet);
-      } else go = false;
-    }
+    this.checkBalance();
   }
 
   takeBet() {
     let amount = Math.round(prompt("How much would you like to bet?"));
-    if (amount <= this.player.wallet) {
+    if (amount <= this.player.wallet && amount >= 100) {
       this.bet = amount;
       this.println("Bet: " + amount + ", Wallet: " + this.player.makeBet(amount));
-    } else {
+    } else if (amount > this.player.wallet) {
       this.println("You only have " + Math.round(this.player.wallet) +
         " chips remaining, please enter a valid amount");
+      this.takeBet();
+    } else {
+      this.println("Minimum bet is 100, please enter a valid amount.");
       this.takeBet();
     }
   }
@@ -205,5 +202,24 @@ class Game {
 
   dealTo(hand) {
     hand.addCard(this.deck.drawCard());
+  }
+
+  checkBalance() {
+    if (this.player.wallet <= 100) {
+      if (confirm("You have less than the minimum bet (100), would you like to buy more chips?")) {
+        this.buyMoreChips();
+      } else go = false;
+    }
+  }
+
+  buyMoreChips() {
+    let amount = Math.round(prompt("How many chips would you like to purchase?"));
+    if(amount + this.player.wallet >= 100){
+      this.player.addMoney(amount);
+      this.println(amount + " chips added, new balance: " + this.player.wallet);
+    } else {
+      this.println("Minimum bet is 100, please purchase at least " + (100 - this.player.wallet) + " chips.");
+      this.buyMoreChips();
+    }
   }
 }

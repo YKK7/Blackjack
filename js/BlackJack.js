@@ -188,6 +188,7 @@ class Game {
   takeBet() {
     let amount = Math.round(prompt("How much would you like to bet?"));
     if (amount <= this.player.wallet) {
+      this.bet = amount;
       this.println("Bet: " + amount + ", Wallet: " + this.player.makeBet(amount));
     } else {
       this.println("You only have " + Math.round(this.player.wallet) +

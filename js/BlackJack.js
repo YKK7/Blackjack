@@ -140,11 +140,10 @@ class Player {
 }
 
 class Game {
-  constructor(display) {
+  constructor() {
     let initialWallet = prompt("How many chips do you want?");
     this.player = new Player(initialWallet);
     this.bet = 0;
-    this.display = display;
     this.playerHand = new Hand();
     this.dealerHand = new Hand();
     this.deck = new Deck();

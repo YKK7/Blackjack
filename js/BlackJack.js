@@ -6,10 +6,10 @@ class Card {
     this.suit = suit;
   }
 
-  value(){
-    if(this.rank < 11){
+  value() {
+    if (this.rank < 11) {
       return this.rank;
-    } else if(this.rank < 14){
+    } else if (this.rank < 14) {
       return 10;
     } else return 1;
   }
@@ -81,38 +81,38 @@ class Hand {
     this.cards = [];
   }
 
-  addCard(card){
+  addCard(card) {
     this.cards.push(card);
   }
 
-  size(){
+  size() {
     return this.cards.length;
   }
 
-  toString(){
+  toString() {
     let result = "";
-    for(let i = 0; i < this.cards.length; i++){
+    for (let i = 0; i < this.cards.length; i++) {
       result += this.cards[i] + " ";
     }
     return result;
   }
 
-  clear(){
+  clear() {
     this.cards = [];
   }
 
-  value(){
+  value() {
     let hasAce = false;
     let size = this.size();
     let result = 0;
 
-    for(let i = 0; i < size; i++){
+    for (let i = 0; i < size; i++) {
       result += this.cards[i].value();
-      if(this.cards[i].value() === 1){
+      if (this.cards[i].value() === 1) {
         hasAce = true;
       }
-    } 
-    if(result < 12 && hasAce){
+    }
+    if (result < 12 && hasAce) {
       return result + 10;
     } else return result;
   }
@@ -124,7 +124,7 @@ class Player {
   }
 
   makeBet(amount) {
-    if (this.wallet > amount) {
+    if (this.wallet >= amount) {
       this.wallet -= amount;
     } else {
       alert("Insufficient Funds");
@@ -137,9 +137,6 @@ class Player {
     return this.wallet;
   }
 
-  getWallet() {
-    return this.wallet;
-  }
 }
 
 class Game {
@@ -150,6 +147,8 @@ class Game {
     this.display = display;
     this.playerHand = new Hand();
     this.dealerHand = new Hand();
+    this.deck = new Deck();
+    this.deck.shuffle();
   }
 
   print(output) {
@@ -164,6 +163,47 @@ class Game {
     display.innerHTML = output;
   }
 
-  play()
+  play() {
+    let go = true;
+    while (go) {
+      this.playRound(go);
+      go = confirm("Play again?");
+    }
+    this.printNew("Cashed out with $" + Math.round(this.player.wallet) + "<br>");
 
+  }
+
+  playRound(go) {
+    this.takeBet();
+    this.dealCards();
+    if (this.player.wallet <= 25) {
+      if (confirm("Minimum bet is 25, would you like to buy more chips?")) {
+        let amount = Math.round(prompt("How many chips would you like to purchase?"));
+        this.player.addMoney(amount);
+        this.println(amount + " chips added, new balance: " + this.player.wallet);
+      } else go = false;
+    }
+  }
+
+  takeBet() {
+    let amount = Math.round(prompt("How much would you like to bet?"));
+    if (amount <= this.player.wallet) {
+      this.println("Bet: " + amount + ", Wallet: " + this.player.makeBet(amount));
+    } else {
+      this.println("You only have " + Math.round(this.player.wallet) +
+        " chips remaining, please enter a valid amount");
+      this.takeBet();
+    }
+  }
+
+  dealCards() {
+    this.dealTo(this.playerHand);
+    this.dealTo(this.dealerHand);
+    this.dealTo(this.playerHand);
+    this.dealTo(this.dealerHand);
+  }
+
+  dealTo(hand) {
+    hand.addCard(this.deck.drawCard());
+  }
 }

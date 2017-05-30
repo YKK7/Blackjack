@@ -138,7 +138,7 @@ describe("Player class", function () {
   describe("constructor(100)", function () {
     let player = new Player(100);
     it("initializes the wallet to 100", function () {
-      expect(player.getWallet()).toEqual(100);
+      expect(player.wallet).toEqual(100);
     });
   });
 
@@ -146,7 +146,7 @@ describe("Player class", function () {
     let player = new Player(100);
     let balance = player.makeBet(75);
     it("should leave the player with a wallet of 25", function () {
-      expect(player.getWallet()).toEqual(25);
+      expect(player.wallet).toEqual(25);
     });
     it("should return the remaining balance (25)", function () {
       expect(balance).toEqual(25);
@@ -157,7 +157,7 @@ describe("Player class", function () {
     let player = new Player(100);
     let balance = player.makeBet(200);
     it("should leave the player with a wallet of 100", function () {
-      expect(player.getWallet()).toEqual(100);
+      expect(player.wallet).toEqual(100);
     });
     it("should return the remaining balance (100)", function () {
       expect(balance).toEqual(100);
@@ -168,10 +168,23 @@ describe("Player class", function () {
     let player = new Player(100);
     let balance = player.addMoney(100);
     it("should add 100 to the wallet", function () {
-      expect(player.getWallet()).toEqual(200);
+      expect(player.wallet).toEqual(200);
     });
     it("should return the new balance (200)", function () {
       expect(balance).toEqual(200);
     });
   });
+});
+
+describe("Game class", function(){
+
+  describe("dealCards() - also tests dealTo(hand)", function(){
+    let game = new Game(document.getElementById("display"));
+    game.dealCards();
+    it("should give 2 cards to both dealer and player", function(){
+      expect(game.playerHand.size()).toEqual(2);
+      expect(game.dealerHand.size()).toEqual(2);
+    });  
+  });
+
 });
